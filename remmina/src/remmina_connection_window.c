@@ -44,7 +44,6 @@
 #include "remmina_init_dialog.h"
 #include "remmina_protocol_widget.h"
 #include "remmina_pref.h"
-#include "remmina_preexec.h"
 #include "remmina_scrolled_viewport.h"
 #include "remmina_widget_pool.h"
 #include "remmina_connection_window.h"
@@ -2155,7 +2154,6 @@ static void remmina_connection_window_initialize_notebook(GtkNotebook* to, GtkNo
 	GtkWidget* widget;
 	RemminaConnectionObject* tc;
 
-	/* Init connection */
 	if (cnnobj)
 	{
 		/* Initial connection for a newly created window */
@@ -3041,9 +3039,6 @@ remmina_connection_window_open_from_file_full(RemminaFile* remminafile, GCallbac
 
 	cnnobj = g_new0(RemminaConnectionObject, 1);
 	cnnobj->remmina_file = remminafile;
-
-	/* Exec precommand before everything else */
-	remmina_preexec_new(cnnobj->remmina_file);
 
 	/* Create the RemminaProtocolWidget */
 	cnnobj->proto = remmina_protocol_widget_new();

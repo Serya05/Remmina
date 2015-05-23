@@ -1,6 +1,6 @@
 /*
  * Remmina - The GTK+ Remote Desktop Client
- * Copyright (C) 2010 Vic Lee
+ * Copyright (C) 2010 Vic Lee 
  * Copyright (C) 2014-2015 Antenore Gatta, Fabio Castelli, Giovanni Panozzo
  *
  * This program is free software; you can redistribute it and/or modify
@@ -15,7 +15,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, 
  * Boston, MA  02110-1301, USA.
  *
  *  In addition, as a special exception, the copyright holders give
@@ -151,9 +151,10 @@ void remmina_applet_menu_add_item(RemminaAppletMenu *menu, RemminaAppletMenuItem
 	GtkWidget *submenu;
 	GtkWidget *groupmenuitem;
 	GtkMenuItem *submenuitem;
-	gchar *s, *p1, *p2, *mstr;
+	gchar *s, *p1, *p2;
 	GList *childs, *child;
 	gint position;
+	gint cmp;
 
 	submenu = GTK_WIDGET(menu);
 	s = g_strdup(menuitem->group);
@@ -174,8 +175,8 @@ void remmina_applet_menu_add_item(RemminaAppletMenu *menu, RemminaAppletMenuItem
 			submenuitem = GTK_MENU_ITEM(child->data);
 			if (gtk_menu_item_get_submenu(submenuitem))
 			{
-				mstr = (gchar*) g_object_get_data(G_OBJECT(submenuitem), "group");
-				if (g_strcmp0(p1, mstr) == 0)
+				cmp = g_strcmp0(p1, (gchar*) g_object_get_data(G_OBJECT(submenuitem), "group"));
+				if (cmp == 0)
 				{
 					/* Found existing group menu */
 					submenu = gtk_menu_item_get_submenu(submenuitem);
@@ -183,25 +184,19 @@ void remmina_applet_menu_add_item(RemminaAppletMenu *menu, RemminaAppletMenuItem
 					break;
 				}
 				else
-				{
-					/* Redo comparison ignoring case and respecting international
-					 * collation, to set menu sort order */
-					if (strcoll(p1, mstr) < 0)
+					if (cmp < 0)
 					{
 						submenu = remmina_applet_menu_add_group(submenu, p1, position, menuitem,
 								&groupmenuitem);
 						break;
 					}
-				}
 			}
 			else
 			{
 				submenu = remmina_applet_menu_add_group(submenu, p1, position, menuitem, &groupmenuitem);
 				break;
 			}
-
 		}
-
 		if (!child)
 		{
 			submenu = remmina_applet_menu_add_group(submenu, p1, -1, menuitem, &groupmenuitem);
@@ -230,7 +225,8 @@ void remmina_applet_menu_add_item(RemminaAppletMenu *menu, RemminaAppletMenuItem
 			continue;
 		if (!REMMINA_IS_APPLET_MENU_ITEM(submenuitem))
 			continue;
-		if (strcoll(menuitem->name, REMMINA_APPLET_MENU_ITEM(submenuitem)->name) <= 0)
+		cmp = g_strcmp0(menuitem->name, REMMINA_APPLET_MENU_ITEM(submenuitem)->name);
+		if (cmp <= 0)
 		{
 			gtk_menu_shell_insert(GTK_MENU_SHELL(submenu), GTK_WIDGET(menuitem), position);
 			break;
